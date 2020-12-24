@@ -11,6 +11,31 @@ const { configure } = require('quasar/wrappers')
 
 module.exports = configure(function (ctx) {
   return {
+
+    // use for howler and opus
+    module: {
+      rules: [
+        {
+          test: /encoderWorker\.min\.js$/,
+          use: [{ loader: 'file-loader' }]
+        },
+        {
+          test: /opus-media-recorder\/encoderWorker\.js$/,
+          oader: 'worker-loader'
+        },
+        {
+          test: /encoderWorker\/.umd\.js$/,
+          type: 'javascript/auto',
+          loader: 'file-loader'
+        },
+        {
+          test: /opus-media-recorder\/.*\.wasm$/,
+          type: 'javascript/auto',
+          loader: 'file-loader'
+        }
+      ]
+    },
+
     // https://quasar.dev/quasar-cli/supporting-ts
     supportTS: {
       tsCheckerConfig: {
@@ -69,15 +94,37 @@ module.exports = configure(function (ctx) {
       // Options below are automatically set depending on the env, set them if you want to override
       // extractCSS: false,
 
+      loaders: {
+        vue: {
+          transformAssetUrls: {
+            audio: 'src'
+          }
+        }
+      },
+
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
         // linting is slow in TS projects, we execute it only for production builds
         if (ctx.prod) {
           cfg.module.rules.push({
             enforce: 'pre',
-            test: /\.(js|vue|ogg|mp3|wav|mpe?g)$/i,
+            test: /\.(js|vue)$/,
             loader: 'file-loader',
             exclude: /node_modules/
+          },
+          {
+            test: /opus-media-recorder\/encoderWorker\.js$/,
+            oader: 'worker-loader'
+          },
+          {
+            test: /encoderWorker\/.umd\.js$/,
+            type: 'javascript/auto',
+            loader: 'file-loader'
+          },
+          {
+            test: /opus-media-recorder\/.*\.wasm$/,
+            type: 'javascript/auto',
+            loader: 'file-loader'
           })
         }
       }
