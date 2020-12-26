@@ -152,6 +152,7 @@ export default defineComponent({
     },
     stopBtn () {
       // Stop recording  
+      this.recorder.stop()
     }
   }
 })
