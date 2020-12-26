@@ -29,7 +29,8 @@ export default defineComponent({
       // music: require('@/assets/music/A1.mp3')
       mp3: require('assets/music/mp3.mp3'),
       wav: require('assets/music/wav.wav'),
-      ogg: require('assets/music/ogg.ogg')
+      ogg: require('assets/music/ogg.ogg'),
+      recorder: null
     }
   },
   methods: {
@@ -84,8 +85,9 @@ export default defineComponent({
         console.log('Finished!')
       })
     },
-    startBtn () {
-      console.log('opus-media-recorder')
+    // this creates mediaRecorder object
+    createStream () {
+      console.log('starting stream ...')
 
       // Choose desired format like audio/webm. Default is audio/ogg
       const options = { mimeType: 'audio/ogg' }
@@ -96,12 +98,37 @@ export default defineComponent({
       }
 
       navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        const recorder = new OpusMediaRecorder(stream, options, workerOptions)
-        recorder.start()
+        this.recorder = new OpusMediaRecorder(stream, options, workerOptions)
+        // recorder.start()
+        // const dataChunks = [];
+        // Recorder Event Handlers
+        /*
+        this.recorder.onstart = _ => {
+          const dataChunks = [];
+          console.log('Recorder started');  
+        };
+        this.recorder.ondataavailable = (e) => {
+          dataChunks.push(e.data);
+          console.log('Recorder data available');
+        };
+        */
+        console.log("opus-media-recorder stream created: ", stream)
+        return stream;
       })
     },
+    startBtn () {
+      // start
+      console.log("start button")
+      /*
+      if (this.recorder) {
+        console.log('Stop the recorder first');
+        throw new Error('Stop the recorder first');
+      }
+      */
+     this.createStream()
+    },
     stopBtn () {
-      // recorder.stop()
+      // Stop recording  
     }
   }
 })
