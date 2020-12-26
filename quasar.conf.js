@@ -21,7 +21,7 @@ module.exports = configure(function (ctx) {
         },
         {
           test: /opus-media-recorder\/encoderWorker\.js$/,
-          oader: 'worker-loader'
+          loader: 'worker-loader'
         },
         {
           test: /encoderWorker\/.umd\.js$/,
@@ -114,7 +114,7 @@ module.exports = configure(function (ctx) {
           },
           {
             test: /opus-media-recorder\/encoderWorker\.js$/,
-            oader: 'worker-loader'
+            loader: 'worker-loader'
           },
           {
             test: /encoderWorker\/.umd\.js$/,
