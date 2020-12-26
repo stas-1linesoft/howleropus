@@ -10,6 +10,7 @@
       <q-btn color="primary" label="Stop" @click="stopBtn()" />
       <audio id="player" controls></audio>
     </div>
+    <div><a id="link">Download Link</a></div>
   </q-page>
 </template>
 
@@ -89,32 +90,64 @@ export default defineComponent({
     createStream () {
       console.log('starting stream ...')
 
+      navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then((stream) => {
+        if (this.recorder && this.recorder.state !== 'inactive') {
+          console.log('Stop the recorder first');
+          throw new Error('Stop the recorder first');
+        }
+
+        console.log("opus-media-recorder stream created: ", stream)
+        return stream;
+      }).catch(e => {
+        console.log(`MediaRecorder is failed: ${e.message}`);
+        Promise.reject(new Error());
+      }).then(this.createMediaRecorder)
+    },
+    createMediaRecorder (stream: any) {
+      //
       // Choose desired format like audio/webm. Default is audio/ogg
-      const options = { mimeType: 'audio/ogg' }
+      let options = { mimeType: 'audio/ogg' }
       // Web worker and .wasm configuration. Note: This is NOT a part of W3C standard.
       const workerOptions = {
         OggOpusEncoderWasmPath: 'https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/OggOpusEncoder.wasm',
         WebMOpusEncoderWasmPath: 'https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/WebMOpusEncoder.wasm'
       }
 
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        this.recorder = new OpusMediaRecorder(stream, options, workerOptions)
-        // recorder.start()
-        // const dataChunks = [];
-        // Recorder Event Handlers
-        /*
-        this.recorder.onstart = _ => {
-          const dataChunks = [];
-          console.log('Recorder started');  
-        };
-        this.recorder.ondataavailable = (e) => {
-          dataChunks.push(e.data);
-          console.log('Recorder data available');
-        };
-        */
-        console.log("opus-media-recorder stream created: ", stream)
-        return stream;
-      })
+      this.recorder = new OpusMediaRecorder(stream, options, workerOptions);
+
+      let dataChunks: any[];
+      let link = document.querySelector('#link');
+      // Recorder Event Handlers
+      this.recorder.onstart = _ => {
+        dataChunks = [];
+
+        console.log('Recorder started');
+      };
+      this.recorder.ondataavailable = (e) => {
+        dataChunks.push(e.data);
+
+        console.log('Recorder data available');
+      };
+      this.recorder.onstop = (e) => {
+        // When stopped add a link to the player and the download link
+        let blob = new Blob(dataChunks, {'type': this.recorder.mimeType});
+        dataChunks = [];
+        let audioURL = URL.createObjectURL(blob);
+        link.href = audioURL;
+        let extension = this.recorder.mimeType.match(/ogg/) ? '.ogg'
+                      : this.recorder.mimeType.match(/webm/) ? '.webm'
+                      : this.recorder.mimeType.match(/wav/) ? '.wav'
+                      : '';
+        link.download = 'recording' + extension;
+
+        console.log('Recorder stopped');
+      };
+      this.recorder.onpause = _ => console.log('Recorder paused');
+      this.recorder.onresume = _ => console.log('Recorder resumed');
+      this.recorder.onerror = e => console.log('Recorder encounters error:' + e.message);
+
+      return stream;
     },
     startBtn () {
       // start

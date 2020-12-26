@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= productName %></title>
+
+<head>
+    <title>
+        <%= productName %>
+    </title>
 
     <meta charset="utf-8">
     <meta name="description" content="<%= productDescription %>">
@@ -14,9 +17,20 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
     <link rel="icon" type="image/ico" href="favicon.ico">
-  </head>
-  <body>
+
+    <!-- NOTE: ref-f4766cae-1740-461f-acd1-c2a0d7e2365a: https://github.com/kbumsik/opus-media-recorder#installation -->
+    <!-- NOTE: ref-c42940b7-faff-4cf1-b309-8c690ec4534f -->
+    <script src="https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/OpusMediaRecorder.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/encoderWorker.umd.js"></script>
+    <script>
+        // Replace MediaRecorder
+        window.MediaRecorder = OpusMediaRecorder;
+    </script>
+</head>
+
+<body>
     <!-- DO NOT touch the following DIV -->
     <div id="q-app"></div>
-  </body>
+</body>
+
 </html>
