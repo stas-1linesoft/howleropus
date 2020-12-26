@@ -18,8 +18,6 @@
 import ExampleComponent from 'components/CompositionComponent.vue'
 import { defineComponent } from '@vue/composition-api'
 import { Howl } from 'howler'
-// opus-media-recorder
-import OpusMediaRecorder from 'opus-media-recorder'
 
 export default defineComponent({
   name: 'Howleropus',
@@ -105,9 +103,10 @@ export default defineComponent({
       }).then(this.createMediaRecorder)
     },
     createMediaRecorder (stream: any) {
-      //
+      console.log("media recorder creating")
       // Choose desired format like audio/webm. Default is audio/ogg
       let options = { mimeType: 'audio/ogg' }
+      console.log("media recorder options: ", options)
       // Web worker and .wasm configuration. Note: This is NOT a part of W3C standard.
       const workerOptions = {
         OggOpusEncoderWasmPath: 'https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/OggOpusEncoder.wasm',
@@ -115,9 +114,10 @@ export default defineComponent({
       }
 
       this.recorder = new OpusMediaRecorder(stream, options, workerOptions);
-
+      console.log("recorder info: ", this.recorder)
       let dataChunks: any[];
       let link = document.querySelector('#link');
+      this.recorder.start()
       // Recorder Event Handlers
       this.recorder.onstart = _ => {
         dataChunks = [];
@@ -143,22 +143,12 @@ export default defineComponent({
 
         console.log('Recorder stopped');
       };
-      this.recorder.onpause = _ => console.log('Recorder paused');
-      this.recorder.onresume = _ => console.log('Recorder resumed');
       this.recorder.onerror = e => console.log('Recorder encounters error:' + e.message);
 
       return stream;
     },
     startBtn () {
-      // start
-      console.log("start button")
-      /*
-      if (this.recorder) {
-        console.log('Stop the recorder first');
-        throw new Error('Stop the recorder first');
-      }
-      */
-     this.createStream()
+      this.createStream()
     },
     stopBtn () {
       // Stop recording  
