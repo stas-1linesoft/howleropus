@@ -1,90 +1,15 @@
-<template>
-  <q-page class="row items-center justify-evenly">
-    <q-btn color="primary" label="playmp3" @click="playmp3()" />
-    <q-btn color="primary" label="playwav" @click="playwav()" />
-    <q-btn color="primary" label="playogg" @click="playogg()" />
-
-    <div>
-      <p>Opus Recorder</p>
-      <q-btn color="primary" label="Start" @click="startBtn()" />
-      <q-btn color="primary" label="Stop" @click="stopBtn()" />
-      <audio id="player" controls></audio>
-    </div>
-    <div><a id="link">Download Link</a></div>
-  </q-page>
-</template>
-
-<script>
 import ExampleComponent from 'components/CompositionComponent.vue'
 import { defineComponent } from '@vue/composition-api'
-import { Howl } from 'howler'
-import OpusMediaRecorder from 'opus-media-recorder';
 
 export default defineComponent({
-  name: 'Howleropus',
+  name: 'Opus',
   components: { ExampleComponent },
   data () {
     return {
-      // need to configure webpack to use
-      // music: require('@/assets/music/A1.mp3')
-      mp3: require('assets/music/mp3.mp3'),
-      wav: require('assets/music/wav.wav'),
-      ogg: require('assets/music/ogg.ogg'),
       recorder: null
     }
   },
   methods: {
-    playmp3 () {
-      console.log('play mp3')
-
-      const sound = new Howl({
-        src: [this.mp3],
-        html5: true,
-        autoplay: true,
-        volume: 1.0
-      })
-
-      sound.play()
-
-      // Fires when the sound finishes playing.
-      sound.on('end', function () {
-        console.log('mp3 finished!')
-      })
-    },
-    playwav () {
-      console.log('play wav')
-
-      const sound = new Howl({
-        src: [this.wav],
-        html5: true,
-        autoplay: true,
-        volume: 1.0
-      })
-
-      sound.play()
-
-      // Fires when the sound finishes playing.
-      sound.on('end', function () {
-        console.log('wav finished!')
-      })
-    },
-    playogg () {
-      console.log('play ogg')
-
-      const sound = new Howl({
-        src: [this.ogg],
-        html5: true,
-        autoplay: true,
-        volume: 1.0
-      })
-
-      sound.play()
-
-      // Fires when the sound finishes playing.
-      sound.on('end', function () {
-        console.log('ogg finished!')
-      })
-    },
     // this creates mediaRecorder object
     createStream () {
       console.log('starting stream ...')
@@ -161,4 +86,3 @@ export default defineComponent({
     }
   }
 })
-</script>

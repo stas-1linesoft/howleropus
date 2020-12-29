@@ -6,7 +6,9 @@ const routes: RouteConfig[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
-      { path: 'howleropus', component: () => import('pages/howleropus.vue') }
+      { path: 'howler', component: () => import('pages/howler.vue') },
+      { path: 'opusmediarecorder', component: () => import('pages/opus-media-recorder.vue') },
+      { path: 'opusrecorder', component: () => import('pages/opus-recorder.vue') }
     ]
   },
 

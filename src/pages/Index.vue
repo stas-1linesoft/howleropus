@@ -2,7 +2,9 @@
   <q-page class="row items-center justify-evenly">
     <div>
       <p>howleropus</p>
-      <q-btn to="howleropus" label="try"></q-btn>
+      <q-btn to="howler" label="howler"></q-btn>
+      <q-btn to="opusmediarecorder" label="opusmediarec"></q-btn>
+      <q-btn to="opusrecorder" label="opusrec"></q-btn>
     </div>
   </q-page>
 </template>
